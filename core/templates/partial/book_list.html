@@ -1,0 +1,12 @@
+{% for book in bookList %}
+    <div class="card" style="width: 12.5rem; height: 12.5rem;">        
+        <div class="card-body text-center">
+            <h5 class="card-title">{{ book.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">12 / {{ book.n_pages }} Páginas</h6>
+            <i class="bi bi-book" style="font-size: 3rem;"></i>
+            <br>        
+            <a href="#" class="card-link" hx-get="{% url 'edit_book' pk=book.id %}" hx-target="#dialog">Editar</a>
+            <a href="#" class="card-link" hx-get="{% url 'delete_book' pk=book.id %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' hx-target="#dialog">Eliminar</a>
+        </div>
+    </div>
+{% endfor %}
