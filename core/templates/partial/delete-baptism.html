@@ -2,12 +2,12 @@
     {% csrf_token %}
     <div class="modal-header">
         <h5 class="modal-title">
-            Eliminar Libro            
+            Eliminar Bautismo            
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body"> 
-        <p>Se eliminara el Libro <b>{{ book.title }}</b> seleccionado, esta acción es irreversible, desea continuar?</p>        
+    <div class="modal-body">                 
+            <p>Se eliminara el Bautismo <b>#{{baptism.id}}</b> del Libro <b>{{ baptism.book.title }}</b>, con la información del bautisado: <i class="fw-bolder">{{ baptism.firstname }} {{ baptism.lastname }}</i> esta acción es irreversible, desea continuar?</p>                
     </div>
     <div class="modal-footer">                    
         <button type="submit" class="btn btn-light border w-100">Confirmar</button>
