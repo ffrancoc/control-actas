@@ -1,0 +1,22 @@
+{% for book in bookList %}
+    <div class="list-group-item list-group-item-action">
+        <p id="textFilter" hidden>{{book.title}} {{book.id}} {{book.identifier}} {% if book.description %}{{book.description}}{% endif %} {% if book.user %}{{book.user.username}}{%endif%}</p>
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="bi bi-journal-text"></i> {{ book.title }} - {{ book.id }}</h5>
+            <small id="bookPages" hx-trigger="load" hx-get="{% url 'baptisms_count' pk=book.id %}" hx-target="this" class="text-muted"></small>
+        </div>        
+        <div class="d-flex flex-column flex-sm-row gap-0 gap-sm-4 mb-1">
+            <p style="font-size: .8rem"><small class="fw-bold">Identificador</small><br>{{book.identifier}}</p>             
+            <p style="font-size: .8rem"><small class="fw-bold">Registrado por</small><br>{% if book.user %}{{book.user.username}}{%endif%}</p>             
+            <p style="font-size: .8rem"><small class="fw-bold">Descripción</small><br>{% if book.description %}{{book.description}}{% endif %}</p>                         
+        
+        </div>
+        <p class="mb-1 d-flex gap-2 justify-content-end">
+            <div class="btn-group float-end">
+                <button class="btn btn-sm btn-light border" hx-get="{% url 'edit_book' pk=book.id %}" hx-target="#dialog"><i class="bi bi-pencil-square"></i> Editar</button>
+                <button class="btn btn-sm btn-light border" hx-get="{% url 'delete_book' pk=book.id %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' hx-target="#dialog"><i class="bi bi-trash-fill"></i> Eliminar</button>        
+            </div>
+        </p>
+    </div>
+{% endfor %}
+

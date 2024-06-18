@@ -1,8 +1,36 @@
 from django.forms.models import ModelForm
-from django.forms import ModelChoiceField
-from django.forms.widgets import Select, TextInput, DateInput
+from django.forms import ModelChoiceField, EmailField, CharField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.forms.widgets import Select, TextInput
 from . import models
 
+
+class UserUpdateForm(UserChangeForm):
+    password = None
+    email = EmailField(required=True, label='Email')    
+    
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser')        
+        widgets = {
+            'first_name': TextInput(attrs={'required': 'required'}),
+            'last_name': TextInput(attrs={'required': 'required'})
+        }
+
+
+class UserNewForm(UserCreationForm):    
+    email = EmailField(required=True, label='Email')
+    
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser', 'password1', 'password2')        
+        widgets = {
+            'first_name': TextInput(attrs={'required': 'required'}),
+            'last_name': TextInput(attrs={'required': 'required'})
+        }
 
 
 class BookForm(ModelForm):

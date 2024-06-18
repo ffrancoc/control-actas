@@ -1,23 +1,32 @@
 {% extends "layout/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Control Actas | Libros{% endblock %}
+{% block title %}Control Actas | Usuarios{% endblock %}
 {% block content %}
     <div class="container-fluid d-flex flex-column p-0 bg-light vh-100">
-        {% include "partial/navbar.html" %}
-        <div class="flex-grow-1 container-fluid bg-white d-flex flex-column flex-sm-row justify-content-center align-items-center"> 
+        {% include "partial/navbar.html" %}                
+        <div class="flex-grow-1 container-fluid bg-white d-flex flex-column flex-sm-row justify-content-center align-items-center">
+            {% if not user.is_superuser %}
+                <div class="alert alert-light border text-center" role="alert">                    
+                    <h3 class="alert-heading"><i class="bi bi-person-fill-lock"></i> Acceso Restringido</h3>
+                    <p>El usuario actual no tiene los suficientes permisos para acceder a esta opción.</p>
+                    <hr>
+                    <small class="mb-0">Si cree que esto es un error pongase en contacto con el usuario administrador.</small>
+                </div>
+            {% else %}
             <div class="container border p-0 m-4">
                 <div class="d-flex flex-column flex-sm-row gap-2 align-items-center bg-light border-bottom p-3">
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>                        
-                        <input id="bookInputFilter" type="text" placeholder="Filtrar Libro" class="form-control">
+                        <input id="userInputFilter" type="text" placeholder="Filtrar Usuario" class="form-control">
                     </div>
-                    <button class="btn btn-sm btn-light border col-12 col-sm-2" type="button" hx-get="{% url 'add_book' %}" hx-target="#dialog">
+                    <button class="btn btn-sm btn-light border col-12 col-sm-2" type="button" hx-get="{% url 'add_user' %}" hx-target="#dialog">
                         <i class="bi bi-journal-plus" style="font-size: 1.2rem;"></i> Registrar</button>
                 </div>                
-                <div id="bookList" class="list-group p-3 overflow-scroll" style="height: 600px;" hx-trigger="load, bookItemsChanged from:body" hx-get="{% url 'book_list' %}" hx-target="this">                    
-                </div>                
+                <div id="userList" class="list-group p-3 overflow-scroll" style="height: 600px;" hx-trigger="load, userItemsChanged from:body" hx-get="{% url 'user_list' %}" hx-target="this">                    
+                </div>
             </div>
+            {% endif %}            
         </div>
         <div id="modal" data-bs-backdrop="static" data-bs-keyboard="false" class="modal fade">
             <div id="dialog" class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered" hx-target="this"></div>
@@ -27,11 +36,12 @@
 {% endblock %}
 {% block customscript %}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {            
-            const bookInputFilter = document.getElementById("bookInputFilter");
-            const bookList = document.getElementById("bookList");
+        document.addEventListener('DOMContentLoaded', () => {                    
 
-            bookInputFilter.addEventListener("input", (e) => {                
+            const userInputFilter = document.getElementById("userInputFilter");
+            const bookList = document.getElementById("userList");
+
+            userInputFilter.addEventListener("input", (e) => {                
                 for(let i = 0; i < bookList.children.length; i++){
 
                     let textFilter = "";
@@ -40,18 +50,12 @@
                         textFilter = bookFilter.innerHTML;
                     }
                     
-                    let pages = "";
-                    const bookPages = bookList.children[i].querySelector("#bookPages");
-                    if (bookPages){
-                        pages = bookPages.innerHTML;
-                    }
-                    
 
-                    filter = bookInputFilter.value.trim().toLowerCase();
+                    filter = userInputFilter.value.trim().toLowerCase();
                     if(filter.length === 0){
                         bookList.children[i].style.display = 'block';
                     }else{                        
-                        text = textFilter + " " + pages;
+                        text = textFilter;
                         if (text.toLowerCase().includes(filter)){
                             bookList.children[i].style.display = 'block';
                         }else{
@@ -61,7 +65,6 @@
                 }                
 
             });
-
 
             const modal = new bootstrap.Modal(document.getElementById("modal"))
             

@@ -15,7 +15,7 @@
                     <button class="btn btn-sm btn-light border col-12 col-sm-2" type="button" hx-get="{% url 'add_baptism' %}" hx-target="#dialog">
                         <i class="bi bi-journal-plus" style="font-size: 1.2rem;"></i> Registrar</button>
                 </div>
-                <div class="list-group p-3 overflow-scroll" style="height: 600px;" hx-trigger="load, baptismItemsChanged from:body" hx-get="{% url 'baptism_list' %}" hx-target="this">                    
+                <div id="baptismList" class="list-group p-3 overflow-scroll" style="height: 600px;" hx-trigger="load, baptismItemsChanged from:body" hx-get="{% url 'baptism_list' %}" hx-target="this">                    
                 </div>
             </div>
         </div>
@@ -28,6 +28,35 @@
 {% block customscript %}
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {     
+
+            const baptismInputFilter = document.getElementById("baptismInputFilter");
+            const baptismList = document.getElementById("baptismList");
+
+            baptismInputFilter.addEventListener("input", (e) => {                
+                for(let i = 0; i < baptismList.children.length; i++){
+
+                    let textFilter = "";
+                    const baptismFilter = baptismList.children[i].querySelector("#textFilter");
+                    if(baptismFilter){
+                        textFilter = baptismFilter.innerHTML;
+                    }
+                    
+
+                    filter = baptismInputFilter.value.trim().toLowerCase();
+                    if(filter.length === 0){
+                        baptismList.children[i].style.display = 'block';
+                    }else{                        
+                        text = textFilter;
+                        if (text.toLowerCase().includes(filter)){
+                            baptismList.children[i].style.display = 'block';
+                        }else{
+                            baptismList.children[i].style.display = 'none';
+                        }
+                    }
+                }                
+
+            });
+
             const modal = new bootstrap.Modal(document.getElementById("modal"))
             
             htmx.on("htmx:afterSwap", (e) => {            

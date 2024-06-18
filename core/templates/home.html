@@ -1,0 +1,61 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}Control Actas | Home{% endblock %}
+{% block content %}
+    <div class="container-fluid d-flex flex-column p-0 bg-light vh-100">
+        {% include "partial/navbar.html" %}
+        <div class="flex-grow-1 container-fluid bg-white d-flex flex-column flex-sm-row justify-content-center align-items-center"> 
+            <div class="container p-4 row row-cols-auto justify-content-center align-items-center gap-4 overflow-scroll" style="height: 600px;">
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-person-fill"></i> Usuarios</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra los usuarios registrados en el sistema</small>
+                        <a href="{% url 'users' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-album"></i> Libros</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra libros registrados en el sistema</small><br>
+                        <a href="{% url 'books' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Bautismos</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra bautismos registrados en el sistema</small>
+                        <a href="{% url 'baptisms' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Comuniones</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra comuniones registradas en el sistema</small>
+                        <a href="{% url 'users' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Confirmaciones</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra confirmaciones registradas en el sistema</small>
+                        <a href="{% url 'users' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 14rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Matrimonios</h5>
+                        <small class="card-subtitle mb-2 text-muted">100 Registros</small><br>
+                        <small class="card-text">Muestra matrimonios registrados en el sistema</small>
+                        <a href="{% url 'users' %}" class="card-link text-decoration-none">Ir a opción</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include "partial/footer.html" %}
+    </div>
+{% endblock %}

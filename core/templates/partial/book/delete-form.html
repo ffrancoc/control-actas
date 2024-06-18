@@ -8,14 +8,14 @@
     </div>
     <div class="modal-body">         
         {% if has_certificates %}
-            <p>No se puede eliminar el Libro <b>#{{book.id}} {{ book.title }}</b> seleccionado, porque tiene actas en él</p>        
+            <p>No se puede eliminar el Libro <b>{{ book.title }} - {{ book.id }}</b> seleccionado, porque tiene actas en él</p>        
         {% else %}
-            <p>Se eliminara el Libro <b>#{{book.id}} {{ book.title }}</b> seleccionado, con la descripción: <i class="fw-bolder">{{ book.description }}</i> esta acción es irreversible, desea continuar?</p>        
+            <p>Se eliminara el Libro <b>{{ book.title }} - {{ book.id }}</b> seleccionado, esta acción es irreversible, desea continuar?</p>        
         {% endif %}            
     </div>
-    <div class="modal-footer">                    
-        {% if not has_certificates %}
+    {% if not has_certificates %}
+        <div class="modal-footer">                            
             <button type="submit" class="btn btn-light border w-100">Confirmar</button>        
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 </form>            

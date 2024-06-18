@@ -3,7 +3,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('logout', views.logout_session, name='logout_session'),
+    path('home', views.home, name='home'),
     path('index', views.index, name='index'),
+    path('users', views.users, name='users'),
+    path('users/add', views.add_user, name='add_user'),
+    path('users/list', views.user_list, name='user_list'),
+    path('users/<int:pk>/preview', views.preview_user, name='preview_user'),
+    path('users/<int:pk>/edit', views.edit_user, name='edit_user'),
+    path('users/<int:pk>/delete', views.delete_user, name='delete_user'),
+    path('users/<int:pk>/password/', views.edit_password, name='edit_password'),
     path('baptisms', views.baptisms, name='baptisms'),
     path('baptisms/add', views.add_baptism, name='add_baptism'),
     path('baptisms/list', views.baptisms_list, name='baptism_list'),
