@@ -25,7 +25,7 @@
                 <small><small class="fw-bolder">Correo</small><br>{{ user.email }}</small>   
             </div>
             <div class="mb-2">
-                <small><small class="fw-bolder">Último Acceso</small><br>{{ user.last_login }}</small>   
+                <small><small class="fw-bolder">Último Acceso</small><br>{% if user.last_login %} {{ user.last_login }} {% endif %}</small>   
             </div>            
         </div>
     </div>    
