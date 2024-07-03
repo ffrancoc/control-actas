@@ -15,4 +15,8 @@ urlpatterns = [
     # Rutas para usuarios
     path('users', UserView.index, name='users'),    
     path('add/users', UserView.add, name='add_user'),    
+    path('delete/users', UserView.delete, name='delete_user'),  
+    path('get/<int:pk>/users', UserView.user, name='get_user'),    
+    path('edit/<int:pk>/users', UserView.edit, name='edit_user'),    
+    path('group/<int:pk>/users', UserView.group, name='group_user'),    
 ]

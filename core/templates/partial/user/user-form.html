@@ -1,7 +1,11 @@
 {% extends 'layout/base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-  Nuevo Usuario
+  {% if useredit %}
+    Editar Usuario
+  {% else %}
+    Nuevo Usuario
+  {% endif %}
 {% endblock %}
 {% block headerbar %}
   <nav aria-label="breadcrumb">
@@ -9,22 +13,36 @@
       <li class="breadcrumb-item">
         <a href="{% url 'users' %}" class="text-decoration-none">Usuarios</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+      {% if useredit %}
+        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+      {% else %}
+        <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+      {% endif %}
     </ol>
   </nav>
+  <a class="ms-auto btn btn-sm btn-light border" href="{% url 'users' %}">Cancelar</a>
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
-    <form action="{% url 'add_user' %}" method="post">
+    <form action="{% if useredit %}
+        {% url 'edit_user' pk=useredit.id %}
+      {% else %}
+        {% url 'add_user' %}
+      {% endif %}"
+      method="post">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Registrar Usuario</h5>
+          <h5 class="card-title">Formulario Usuario</h5>
           <h6 class="card-subtitle mb-2 text-muted">* campos obligatorios</h6>
           <div class="card-body">
             {% csrf_token %}
             {{ form|crispy }}
           </div>
-          <button type="submit" class="btn btn-sm btn-primary w-100">Guardar</button>
+          {% if useredit %}
+            <button type="submit" class="btn btn-sm btn-light border w-100">Actualizar</button>
+          {% else %}
+            <button type="submit" class="btn btn-sm btn-light border w-100">Guardar</button>
+          {% endif %}
         </div>
       </div>
     </form>

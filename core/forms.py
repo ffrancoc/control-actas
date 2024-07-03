@@ -17,7 +17,7 @@ class UserUpdateForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser')        
+        fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active')        
         widgets = {
             'first_name': TextInput(attrs={'required': 'required'}),
             'last_name': TextInput(attrs={'required': 'required'})
@@ -29,7 +29,7 @@ class UserNewForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser', 'password1', 'password2')        
+        fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'password1', 'password2')        
         widgets = {
             'first_name': TextInput(attrs={'required': 'required'}),
             'last_name': TextInput(attrs={'required': 'required'})

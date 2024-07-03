@@ -12,3 +12,4 @@ def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return redirect('users')
+
