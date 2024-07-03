@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'core',
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap5',)
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
@@ -128,8 +128,8 @@ STATICFILES_DIRS = [
 ]
 
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'users'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Default primary key field type

@@ -1,59 +1,15 @@
 {% load static %}
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'index' %}">
-                <img src="{% static 'img/icono.png' %}" alt="Logo" width="40px">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                <span><i class="bi bi-grid-3x3-gap-fill"></i></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggler">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Inicio</a>
-                    </li>        
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users' %}">Usuarios</a>
-                    </li>        
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'books' %}">Libros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'baptisms' %}">Bautismos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'communions' %}">Comuniones</a>
-                    </li>                
-                    {% if user.is_authemticated %}
-                        <li class="nav-item">
-                            <a class="nav-link">Comuniones</a>
-                        </li>                        
-                        <li class="nav-item">
-                            <a class="nav-link">Confirmaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link">Matrimonios</a>
-                        </li>
-                    {% endif %}                                        
-                </ul>
-                <form class="d-flex" role="search">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">                    
-                        {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold" href="#"><i class="bi bi-person-fill"></i> {{user.username}}</a>
-                            </li>       
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout_session' %}">Salir</a>
-                            </li>                                        
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
-                            </li>     
-                        {% endif %}            
-                    </ul>
-                </form>
-            </div>
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background: transparent !important;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><i class="bi bi-cloud-plus-fill"></i> Control Actas</a>
+      <ul class="navbar-nav ms-auto mb-lg-0">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'logout_session' %}">Salir</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
 </div>

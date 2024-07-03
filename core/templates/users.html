@@ -1,89 +1,93 @@
-{% extends "layout/base.html" %}
-{% load static %}
-{% load crispy_forms_tags %}
-{% block title %}Control Actas | Usuarios{% endblock %}
+{% extends 'layout/base.html' %}
+{% block title %}
+  Usuarios
+{% endblock %}
+{% block headerbar %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pt-3">
+      <li class="breadcrumb-item">
+        <a href="{% url 'users' %}" class="text-decoration-none">Usuarios</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Listado</li>
+    </ol>
+  </nav>
+  <a class="ms-auto btn btn-sm btn-primary" href="{% url 'add_user' %}">Nuevo</a>
+{% endblock %}
+{% block alerts %}
+  {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
+      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endblock %}
 {% block content %}
-    <div class="container-fluid d-flex flex-column p-0 bg-light vh-100">
-        {% include "partial/navbar.html" %}                
-        <div class="flex-grow-1 container-fluid bg-white d-flex flex-column flex-sm-row justify-content-center align-items-center">
-            {% if not user.is_superuser %}
-                <div class="alert alert-light border text-center" role="alert">                    
-                    <h3 class="alert-heading"><i class="bi bi-person-fill-lock"></i> Acceso Restringido</h3>
-                    <p>El usuario actual no tiene los suficientes permisos para acceder a esta opción.</p>
-                    <hr>
-                    <small class="mb-0">Si cree que esto es un error pongase en contacto con el usuario administrador.</small>
-                </div>
-            {% else %}
-            <div class="container border p-0 m-4">
-                <div class="d-flex flex-column flex-sm-row gap-2 align-items-center bg-light border-bottom p-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>                        
-                        <input id="userInputFilter" type="text" placeholder="Filtrar Usuario" class="form-control">
-                    </div>
-                    <button class="btn btn-sm btn-light border col-12 col-sm-2" type="button" hx-get="{% url 'add_user' %}" hx-target="#dialog">
-                        <i class="bi bi-journal-plus" style="font-size: 1.2rem;"></i> Registrar</button>
-                </div>                
-                <div id="userList" class="list-group p-3 overflow-scroll" style="height: 600px;" hx-trigger="load, userItemsChanged from:body" hx-get="{% url 'user_list' %}" hx-target="this">                    
-                </div>
-            </div>
-            {% endif %}            
-        </div>
-        <div id="modal" data-bs-backdrop="static" data-bs-keyboard="false" class="modal fade">
-            <div id="dialog" class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered" hx-target="this"></div>
-        </div>
-        {% include "partial/footer.html" %}
-    </div>    
+  <div class="flex-grow-1 d-flex flex-column">
+    <div id="hacker-list">
+      <input class="search form-control" placeholder="🔍 Filtrar ..." />
+      <div class="d-flex flex-wrap gap-3 py-2">
+        <span class="text-muted">Ordenar por:</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="username" style="cursor: pointer; font-size: .8rem;">Usuario</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Nombre</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="admin" style="cursor: pointer; font-size: .8rem;">Administrador</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="status" style="cursor: pointer; font-size: .8rem;">Activo</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="email" style="cursor: pointer; font-size: .8rem;">Correo</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="login" style="cursor: pointer; font-size: .8rem;">Acceso</span>
+      </div>
+
+      <ul class="list list-group">
+        {% for u in users %}
+          <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
+            <p class="username" style="width: 100px">
+              <small class="fw-bold">Usuario</small><br />{{ u.username }}
+            </p>
+            <p class="name" style="width: 180px">
+              <small class="fw-bold">Nombre</small><br />{{ u.first_name }} {{ u.last_name }}
+            </p>
+            <p class="admin" style="width: 100px">
+              <small class="fw-bold">Administrador</small><br />{% if u.is_staff %}
+                <i class="bi bi-person-fill-check"></i>
+              {% endif %}
+            </p>
+            <p class="status" style="width: 50px">
+              <small class="fw-bold">Activo</small><br />{% if u.is_active %}
+                <i class="bi bi-check2"></i>
+              {% endif %}
+            </p>
+            <p class="email" style="width: 200px">
+              <small class="fw-bold">Correo</small><br />{{ u.email }}
+            </p>
+            <p class="login" style="width: 150px">
+              <small class="fw-bold">Ultimo Acceso</small><br />{% if u.last_login %}
+                {{ u.last_login|date:'M d, Y' }}
+              {% endif %}
+            </p>
+            <p class="actions">
+              <small class="fw-bold">Acciones</small><br />
+              <a class="me-1" href="#">Editar</a>
+              <a class="me-1" href="#">Clave</a>
+              <a class="me-1" href="#">Eliminar</a>
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+      <ul class="pagination mt-2"></ul>
+    </div>
+    <div class="border-top pt-2 text-muted">
+      <caption>Usuarios registrados: {{ userlen }}</caption>
+    </div>
+  </div>
 {% endblock %}
 {% block customscript %}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {                    
-
-            const userInputFilter = document.getElementById("userInputFilter");
-            const bookList = document.getElementById("userList");
-
-            userInputFilter.addEventListener("input", (e) => {                
-                for(let i = 0; i < bookList.children.length; i++){
-
-                    let textFilter = "";
-                    const bookFilter = bookList.children[i].querySelector("#textFilter");
-                    if(bookFilter){
-                        textFilter = bookFilter.innerHTML;
-                    }
-                    
-
-                    filter = userInputFilter.value.trim().toLowerCase();
-                    if(filter.length === 0){
-                        bookList.children[i].style.display = 'block';
-                    }else{                        
-                        text = textFilter;
-                        if (text.toLowerCase().includes(filter)){
-                            bookList.children[i].style.display = 'block';
-                        }else{
-                            bookList.children[i].style.display = 'none';
-                        }
-                    }
-                }                
-
-            });
-
-            const modal = new bootstrap.Modal(document.getElementById("modal"))
-            
-            htmx.on("htmx:afterSwap", (e) => {            
-                if (e.detail.target.id == "dialog") {
-                    modal.show()
-                }
-            })
-
-            htmx.on("htmx:beforeSwap", (e) => {
-                if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
-                    modal.hide()
-                    e.detail.shouldSwap = false
-                }
-            })
-
-            htmx.on("hidden.bs.modal", () => {
-                document.getElementById("dialog").innerHTML = ""
-            })
-        })
-    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      var options = {
+        valueNames: ['username', 'name', 'admin', 'status', 'email', 'login'],
+        page: 20,
+        pagination: true
+      }
+    
+      var hackerList = new List('hacker-list', options)
+    })
+  </script>
 {% endblock %}

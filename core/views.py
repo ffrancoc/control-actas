@@ -9,8 +9,6 @@ def logout_session(request):
     return redirect('index')
 
 def index(request):
-    return render(request, 'index.html', {})
-
-@login_required
-def home(request):
-    return render(request, 'home.html', {})
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return redirect('users')

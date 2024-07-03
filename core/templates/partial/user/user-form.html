@@ -1,26 +1,32 @@
+{% extends 'layout/base.html' %}
 {% load crispy_forms_tags %}
-<form class="modal-content" hx-post="{{ request.path }}">                
-    {% csrf_token %}
-    <div class="modal-header">
-        <h5 class="modal-title">            
-            {% if user %}
-                Editar Usuario
-            {% else %}
-                Nuevo Usuario
-            {% endif %}    
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">            
-        {{ form | crispy}}                            
-    </div>
-    <div class="modal-footer">                    
-        <button type="submit" class="btn btn-light border w-100">
-            {% if user %}
-                Actualizar
-            {% else %}
-                Guardar
-            {% endif %}
-        </button>
-    </div>
-</form>            
+{% block title %}
+  Nuevo Usuario
+{% endblock %}
+{% block headerbar %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pt-3">
+      <li class="breadcrumb-item">
+        <a href="{% url 'users' %}" class="text-decoration-none">Usuarios</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+    </ol>
+  </nav>
+{% endblock %}
+{% block content %}
+  <div class="flex-grow-1 d-flex flex-column">
+    <form action="{% url 'add_user' %}" method="post">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Registrar Usuario</h5>
+          <h6 class="card-subtitle mb-2 text-muted">* campos obligatorios</h6>
+          <div class="card-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary w-100">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

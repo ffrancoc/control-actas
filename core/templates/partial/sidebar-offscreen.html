@@ -1,0 +1,30 @@
+<div class="offcanvas offcanvas-start text-white" tabindex="-1" id="offSidebar" aria-labelledby="offSidebarLabel" style="background: linear-gradient(to bottom, #7330fa, #5e35af) !important;">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="d-flex flex-column gap-3 fs-5">
+      <a id="sidebar-item" href="{% url 'users' %}" class="p-2 text-decoration-none"><i class="bi bi-people-fill"></i> Usuarios</a>
+      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-album"></i> Libros</a>
+      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Bautismos</a>
+      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Comuniones</a>
+      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Confirmaciones</a>
+      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Matrimonios</a>
+
+      {% if user.is_authenticated %}
+        <div class="accordion mt-auto" id="accordionUserSidebar">
+          <div class="accordion-item border-0" style="background: #6533c9 !important;">
+            <h2 class="accordion-header" id="headingOne"><button class="accordion-button text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background: #6533c9 !important;"><i class="bi bi-person-fill me-2"></i> {{ user.username }}</button></h2>
+            <div id="collapseOne" class="accordion-collapse collapse border-0" aria-labelledby="headingOne" data-bs-parent="#accordionUserSidebar">
+              <div class="accordion-body p-2" style="background: #6533c9 !important;">
+                <a id="sidebar-item" href="#" class="p-2 text-decoration-none">Editar</a><br />
+                <a id="sidebar-item" href="#" class="p-2 text-decoration-none">Clave</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
