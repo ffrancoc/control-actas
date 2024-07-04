@@ -19,8 +19,8 @@ class UserUpdateForm(UserChangeForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active')        
         widgets = {
-            'first_name': TextInput(attrs={'required': 'required'}),
-            'last_name': TextInput(attrs={'required': 'required'})
+            # 'first_name': TextInput(attrs={'required': 'required'}),
+            # 'last_name': TextInput(attrs={'required': 'required'})
         }
 
 
@@ -31,8 +31,8 @@ class UserNewForm(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'password1', 'password2')        
         widgets = {
-            'first_name': TextInput(attrs={'required': 'required'}),
-            'last_name': TextInput(attrs={'required': 'required'})
+            # 'first_name': TextInput(attrs={'required': 'required'}),
+            # 'last_name': TextInput(attrs={'required': 'required'})
         }
 
 

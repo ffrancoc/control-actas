@@ -7,14 +7,12 @@ from ..models import Baptisms, Communions, Books
 
 
 class BookView(object):
-    
-    @staticmethod
-    def empty_response(headers={}):
-        return HttpResponse(status=204, headers=headers)
-    
 
+        
+    @login_required
     def index(request):        
-        return render(request, 'books.html', {})
+        _books = Books.objects.exclude(id=request.user.id).all()        
+        return render(request, 'books.html', {"books": _books })
     
 
     @login_required

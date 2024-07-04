@@ -6,7 +6,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ..forms import UserNewForm, UserUpdateForm
+from ..forms import UserNewForm, UserUpdateForm, PasswordChangeForm
 
 
 class UserView(object):
@@ -16,6 +16,9 @@ class UserView(object):
     def index(request):        
         _users = User.objects.exclude(id=request.user.id).all()
         userlen = len(_users) + 1
+
+        print([Group.objects.filter(user=request.user).all()])
+
         return render(request, 'users.html', {"users": _users, "userlen": userlen})
     
     @login_required
@@ -24,7 +27,7 @@ class UserView(object):
         if not _group:
             return redirect('users')
         
-        data = serializers.serialize('json', [_group])
+        data = serializers.serialize('json', [_group])        
         return HttpResponse(data, content_type="application/json")
     
     @login_required
@@ -33,13 +36,13 @@ class UserView(object):
         if not _user:
             return redirect('users')
         
-        data = serializers.serialize('json', [_user])
+        data = serializers.serialize('json', [_user])        
         return HttpResponse(data, content_type="application/json")
 
 
     @login_required
     def add(request):
-        template_path = 'partial/user/user-form.html'
+        template_path = 'forms/user-form.html'
 
         if request.method == 'POST':
             form = UserNewForm(request.POST)
@@ -52,11 +55,11 @@ class UserView(object):
 
         form = UserNewForm()
         return render(request, template_path, {'form': form})
-
+    
 
     @login_required
     def edit(request, pk):
-        template_path = 'partial/user/user-form.html'        
+        template_path = 'forms/user-form.html'        
         try:
             user = get_object_or_404(User, pk=pk)
 
@@ -71,9 +74,31 @@ class UserView(object):
             else:
                 form = UserUpdateForm(instance=user)        
                 return render(request, template_path, {'form': form, 'useredit': user})
+        except Exception as ex:            
+            messages.add_message(request, messages.ERROR, 'No se ha podido actualizar el usuario')
+            return redirect('users')
+        
+    @login_required
+    def edit_password(request, pk):
+        template_path = 'forms/password-form.html'        
+        try:            
+            if request.method == 'POST':            
+                user_id = request.POST['userid']
+                user = get_object_or_404(User, pk=user_id)
+                form = PasswordChangeForm(request.POST, user=user)
+                if form.is_valid():
+                    form.save()
+                    messages.add_message(request, messages.INFO, "Contraseña actualizado exitosamente")
+                    return redirect("users")
+                else:
+                    return render(request, template_path, {'form': form})        
+            else:
+                user = get_object_or_404(User, pk=pk)
+                form = PasswordChangeForm(user=user)        
+                return render(request, template_path, {'form': form, 'useredit': user})
         except Exception as ex:
             print(f"ERROR: {ex}")
-            messages.add_message(request, messages.ERROR, 'No se ha podido actualizar el usuario')
+            messages.add_message(request, messages.ERROR, 'No se ha podido actualizar la contraseña del usuario')
             return redirect('users')
 
 

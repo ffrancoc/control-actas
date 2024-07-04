@@ -18,5 +18,9 @@ urlpatterns = [
     path('delete/users', UserView.delete, name='delete_user'),  
     path('get/<int:pk>/users', UserView.user, name='get_user'),    
     path('edit/<int:pk>/users', UserView.edit, name='edit_user'),    
+    path('edit/password/<int:pk>/users', UserView.edit_password, name='edit_user_password'),
     path('group/<int:pk>/users', UserView.group, name='group_user'),    
+
+    # Rutas para los libros
+    path('books', BookView.index, name='books'),    
 ]
