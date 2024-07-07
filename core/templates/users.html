@@ -27,7 +27,7 @@
 {% block content %}
   {% if user.is_staff %}
     <div class="flex-grow-1 d-flex flex-column">
-      <div id="hacker-list">
+      <div id="user-list">
         <input class="search form-control" placeholder="🔍 Filtrar ..." />
         <div class="d-flex flex-wrap gap-3 py-2">
           <span class="text-muted">Ordenar por:</span>
@@ -223,7 +223,7 @@
         pagination: true
       }
     
-      var hackerList = new List('hacker-list', options)
+      var userList = new List('user-list', options)
     })
   </script>
 {% endblock %}

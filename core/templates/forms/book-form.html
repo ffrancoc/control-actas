@@ -1,0 +1,58 @@
+{% extends 'layout/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+  {% if book %}
+    Editar Libro
+  {% else %}
+    Nuevo Libro
+  {% endif %}
+{% endblock %}
+{% block headerbar %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pt-3">
+      <li class="breadcrumb-item">
+        <a href="{% url 'books' %}" class="text-decoration-none">Libros</a>
+      </li>
+      {% if book %}
+        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+      {% else %}
+        <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+      {% endif %}
+    </ol>
+  </nav>
+  <a class="ms-auto btn btn-sm btn-light border" href="{% url 'books' %}">Cancelar</a>
+{% endblock %}
+{% block content %}
+  <div class="flex-grow-1 d-flex flex-column">
+    <form action="{% if book %}
+        {% url 'edit_book' pk=book.id %}
+      {% else %}
+        {% url 'add_book' %}
+      {% endif %}"
+      method="post">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Formulario Libros</h5>
+          <h6 class="card-subtitle mb-2 text-muted">* campos obligatorios</h6>
+          <div class="card-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+          </div>
+          {% if book %}
+            <button type="submit" class="btn btn-sm custom-btn w-100">Actualizar</button>
+          {% else %}
+            <button type="submit" class="btn btn-sm custom-btn w-100">Guardar</button>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+{% block customscript %}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
+      sidebarItems[2].classList.add('sidebar-selected')
+    })
+  </script>
+{% endblock %}

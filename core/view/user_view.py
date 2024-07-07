@@ -78,21 +78,24 @@ class UserView(object):
             messages.add_message(request, messages.ERROR, 'No se ha podido actualizar el usuario')
             return redirect('users')
         
+        
     @login_required
     def edit_password(request, pk):
         template_path = 'forms/password-form.html'        
         try:            
-            if request.method == 'POST':            
-                user_id = request.POST['userid']
-                user = get_object_or_404(User, pk=user_id)
-                form = PasswordChangeForm(request.POST, user=user)
+            if request.method == 'POST':                            
+                user = get_object_or_404(User, pk=pk)
+                form = PasswordChangeForm(user=user)                
+                                
+                print(f"FORM VALID: {form.is_valid}")
                 if form.is_valid():
                     form.save()
-                    messages.add_message(request, messages.INFO, "Contraseña actualizado exitosamente")
+                    messages.add_message(request, messages.INFO, "Contraseña actualizada exitosamente")
                     return redirect("users")
                 else:
-                    return render(request, template_path, {'form': form})        
-            else:
+                    print(f"FORM ERROR: {form.errors}")
+                    return render(request, template_path, {'form': form, 'useredit': user})        
+            else:                                
                 user = get_object_or_404(User, pk=pk)
                 form = PasswordChangeForm(user=user)        
                 return render(request, template_path, {'form': form, 'useredit': user})

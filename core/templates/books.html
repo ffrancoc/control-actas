@@ -11,7 +11,7 @@
       <li class="breadcrumb-item active" aria-current="page">Listado</li>
     </ol>
   </nav>
-  <a class="ms-auto btn btn-sm btn-light border" href="{% url 'add_user' %}">Nuevo</a>
+  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_book' %}">Nuevo</a>
 {% endblock %}
 {% block alerts %}
   {% for message in messages %}
@@ -23,39 +23,41 @@
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
-    <div id="hacker-list">
+    <div id="book-list">
       <input class="search form-control" placeholder="🔍 Filtrar ..." />
       <div class="d-flex flex-wrap gap-3 py-2">
         <span class="text-muted">Ordenar por:</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="username" style="cursor: pointer; font-size: .8rem;">Usuario</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Nombre</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="email" style="cursor: pointer; font-size: .8rem;">Correo</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="status" style="cursor: pointer; font-size: .8rem;">Estado</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="identifier" style="cursor: pointer; font-size: .8rem;">Identificador</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="type" style="cursor: pointer; font-size: .8rem;">Tipo</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="n_pages" style="cursor: pointer; font-size: .8rem;">Páginas</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="author" style="cursor: pointer; font-size: .8rem;">Author</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="description" style="cursor: pointer; font-size: .8rem;">Descripción</span>
       </div>
 
       <ul class="list list-group">
-        {% for u in users %}
+        {% for b in books %}
           <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
-            <p class="username" style="width: 100px">
-              <small class="fw-bold">Usuario</small><br />{{ u.username }}
+            <p class="identifier" style="width: 150px">
+              <small class="fw-bold">Identificador</small><br />{{ b.identifier }}
+            </p>            
+            <p class="type" style="width: 100px">
+              <small class="fw-bold">Tipo Libro</small><br />{{ b.title }}
+            </p>            
+            <p class="n_pages" style="width: 80px">
+              <small class="fw-bold">Páginas</small><br />{{ b.n_pages }}
             </p>
-            <p class="name" style="width: 180px">
-              <small class="fw-bold">Nombre</small><br />{{ u.first_name }} {{ u.last_name }}
-            </p>
-            <p class="email" style="width: 200px">
-              <small class="fw-bold">Correo</small><br />{{ u.email }}
-            </p>
-            <p class="status" style="width: 100px">
-              <small class="fw-bold">Activo</small><br />{% if u.is_active %}
-                <i class="bi bi-check2"></i>
+            <p class="author" style="width: 100px">
+              <small class="fw-bold">Author</small><br />{% if b.user.username %}
+                {{b.user.username}}
               {% endif %}
+            </p>
+            <p class="description" style="width: 200px">
+              <small class="fw-bold">Descripción</small><br />{{ b.description }}
             </p>
             <p class="actions">
               <small class="fw-bold">Acciones</small><br />
-              <a class="me-1 text-decoration-none" title="Vista Previa" href="" data-bs-toggle="modal" data-bs-id="{{ u.id }}" data-bs-target="#previewModal">ver</a>
-              <a class="me-1 text-decoration-none" title="Editar Usuario" href="{% url 'edit_user' pk=u.id %}">editar</a>
-              <a class="me-1 text-decoration-none" title="Editar Contraseña" href="#">clave</a>
-              <a class="me-1 text-decoration-none" title="Eliminar Usuario" href="" data-bs-toggle="modal" data-bs-id="{{ u.id }}" data-bs-username="{{ u.username }}" data-bs-target="#deleteModal">eliminar</a>
+              <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_book' pk=b.id %}"><i class="bi bi-pencil-square"></i></a>            
+              <a class="me-1 text-decoration-none" title="Eliminar" href="" data-bs-toggle="modal" data-bs-id="{{ b.id }}" data-bs-book="{{ b.title }}" data-bs-bookidentifier="{{b.identifier}}" data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></a>               
             </p>
           </li>
         {% endfor %}
@@ -64,62 +66,28 @@
     </div>
     <div class="border-top pt-2 text-muted d-flex justify-content-between">
       <p>
-        <caption>Usuarios registrados: {{ userlen }}</caption>
+        <caption>Libros registrados: {{ books|length }}</caption>
       </p>
     </div>
   </div>
 
-  <!-- Modal Vista Previa -->
-  <div class="modal fade" id="previewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0 px-3 py-3">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row row-cols-2">
-            <div class="mb-2">
-              <small id="txtusername"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtname"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtemail"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtlogin"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtjoin"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtstatus"></small>
-            </div>
-            <div class="mb-2">
-              <small id="txtgroups"></small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Modal Eliminar -->
   <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form action="{% url 'delete_user' %}" method="post">
-          <div class="modal-header border-0 px-3 py-3">
+        <form action="{% url 'delete_book' %}" method="post">
+          <div class="modal-header px-3 py-3">
+            <h5 class="modal-title fs-5">Eliminar</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body px-3">
             {% csrf_token %}
-            <input type="text" name="userid" id="idinput" readonly hidden />
-            <p id="userinfo" class="p-0"></p>
+            <input type="text" name="bookid" id="idinput" readonly hidden />
+            <p id="bookinfo" class="p-0"></p>
           </div>
           <div class="modal-footer border-0 p-0">
-            <button type="submit" class="btn btn-sm btn-light border">Cofirmar</button>
+            <button type="submit" class="btn btn-sm custom-btn">Cofirmar</button>
           </div>
         </form>
       </div>
@@ -130,70 +98,31 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
-      sidebarItems[1].classList.add('sidebar-selected')
-    
-      const previewModal = document.getElementById('previewModal')
-      previewModal.addEventListener('show.bs.modal', (event) => {
-        const button = event.relatedTarget
-    
-        const userId = button.getAttribute('data-bs-id')
-    
-        const username = document.getElementById('txtusername')
-        const name = document.getElementById('txtname')
-        const email = document.getElementById('txtemail')
-        const login = document.getElementById('txtlogin')
-        const joindate = document.getElementById('txtjoin')
-        const status = document.getElementById('txtstatus')
-        const groups = document.getElementById('txtgroups')
-    
-        var url = "{% url 'get_user' pk=0 %}".replace('0', userId)
-        fetch(url)
-          .then((res) => res.json())
-          .then((data) => {
-            username.innerHTML = `<small class="fw-bolder">Usuario</small><br />${data[0].fields.username}`
-            name.innerHTML = `<small class="fw-bolder">Nombre</small><br />${data[0].fields.first_name} ${data[0].fields.last_name}`
-            email.innerHTML = `<small class="fw-bolder">Correo</small><br />${data[0].fields.email}`
-            login.innerHTML = `<small class="fw-bolder">Último acceso</small><br />${data[0].fields.last_login ? data[0].fields.last_login : ''}`
-            joindate.innerHTML = `<small class="fw-bolder">Creación</small><br />${data[0].fields.date_joined}`
-            status.innerHTML = `<small class="fw-bolder">Estado</small><br />${data[0].fields.is_active ? 'Activo' : 'Inactivo'}`
-    
-            groupsList = data[0].fields.groups
-            if (groupsList.length > 0) {
-              var groupStr = '<small class="fw-bolder">Permisos</small><br />'
-              for (var x = 0; x < data[0].fields.groups.length; x++) {
-                var url2 = "{% url 'group_user' pk=0 %}".replace('0', data[0].fields.groups[x])
-                fetch(url2)
-                  .then((res) => res.json())
-                  .then((data) => {
-                    groupStr += `${data[0].fields.name}<br />`
-                    groups.innerHTML = `${groupStr}`
-                  })
-              }
-            }
-          })
-      })
+      sidebarItems[2].classList.add('sidebar-selected')
+          
     
       const deleteModal = document.getElementById('deleteModal')
       deleteModal.addEventListener('show.bs.modal', (event) => {
         const button = event.relatedTarget
     
-        const userId = button.getAttribute('data-bs-id')
-        const username = button.getAttribute('data-bs-username')
+        const bookId = button.getAttribute('data-bs-id')
+        const book = button.getAttribute('data-bs-book')
+        const bookIdentifier = button.getAttribute('data-bs-bookidentifier')
     
-        const userInfo = document.getElementById('userinfo')
+        const bookInfo = document.getElementById('bookinfo')
         const idInput = document.getElementById('idinput')
     
-        userInfo.innerHTML = `<b>${username}</b> será eliminad@, esta acción es irreversible.<br/> ¿Desea continuar?`
-        idInput.value = userId
+        bookInfo.innerHTML = `El libro ${book} con identificador: <b>${bookIdentifier}</b> será eliminado, esta acción es irreversible.<br/> ¿Desea continuar?`
+        idInput.value = bookId
       })
     
       var options = {
-        valueNames: ['username', 'name', 'email', 'status'],
+        valueNames: ['type', 'identifier', 'n_pages', 'author', 'description'],
         page: 20,
         pagination: true
       }
     
-      var hackerList = new List('hacker-list', options)
+      var bookList = new List('book-list', options)
     })
   </script>
 {% endblock %}

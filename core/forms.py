@@ -36,6 +36,32 @@ class UserNewForm(UserCreationForm):
         }
 
 
+class PersonForm(ModelForm):
+    class Meta:
+        model = models.Persons
+        fields = ('identifier', 'firstname', 'lastname', 'birthplace',  'birthday', 'gender', 'father_info', 'mother_info')
+        labels = {
+            'identifier': 'Identificador', 
+            'firstname': 'Nombre Completo', 
+            'lastname': 'Apellido Completo', 
+            'birthplace': 'Lugar de Nacimiento',            
+            'birthday': 'Fecha de Nacimiento',
+            'gender': 'Genero', 
+            'father_info': 'Información Completa del Padre', 
+            'mother_info': 'Información Completa de la Madre'
+        }
+        widgets = {
+            'identifier': TextInput(attrs={'class': 'form-control mb-2', 'readonly': True}),
+            'firstname': TextInput(attrs={'class': 'form-control mb-2'}),
+            'lastname': TextInput(attrs={'class': 'form-control mb-2'}),
+            'birthplace': TextInput(attrs={'class': 'form-control mb-2'}),
+            'birthday': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
+            'gender': Select(attrs={'class': 'form-control mb-2'}), 
+            'father_info': TextInput(attrs={'class': 'form-control mb-2'}),
+            'mother_info': TextInput(attrs={'class': 'form-control mb-2'})
+        }
+
+
 class BookForm(ModelForm):
     class Meta:
         model = models.Books
@@ -43,12 +69,12 @@ class BookForm(ModelForm):
         labels = {
             'title': 'Tipo de Libro',
             'identifier': 'Identificador',
-            'description': 'Descripción (opcional)',
+            'description': 'Descripción',
             'n_pages': 'Páginas',
         }
         widgets = {
             'title': Select(attrs={'class': 'form-control mb-2'}),
-            'identifier': TextInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Ej. Parroquia Centro'}),
+            'identifier': TextInput(attrs={'class': 'form-control mb-2', 'readonly': True}),
             'description': TextInput(attrs={'class': 'form-control mb-2'}),
             'n_pages': Select(attrs={'class': 'form-control mb-2'}),
         }
