@@ -75,9 +75,9 @@ class PersonView(object):
         if request.method == 'POST':
             try:                
                 pk = request.POST['personid']
-                book = get_object_or_404(Persons, pk=pk)        
+                person = get_object_or_404(Persons, pk=pk)        
                 if request.method == 'POST':            
-                    book.delete()                            
+                    person.delete()                            
                     messages.add_message(request, messages.INFO, 'Persona eliminada satisfactoriamente')
                     return redirect('persons')                
             except:

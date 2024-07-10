@@ -7,8 +7,9 @@
     <div class="d-flex flex-column gap-3 fs-5">
       <a id="sidebar-item" href="{% url 'users' %}" class="p-2 text-decoration-none"><i class="bi bi-people-fill"></i> Usuarios</a>
       <a id="sidebar-item" href="{% url 'persons' %}" class="p-2 text-decoration-none"><i class="bi bi-people-fill"></i> Personas</a>
+      <a id="sidebar-item" href="{% url 'parishs' %}" class="p-2 text-decoration-none"><i class="bi bi-house-add-fill"></i> Parroquias</a>      
       <a id="sidebar-item" href="{% url 'books' %}" class="p-2 text-decoration-none"><i class="bi bi-journal-album"></i> Libros</a>
-      <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Bautismos</a>
+      <a id="sidebar-item" href="{% url 'baptisms' %}" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Bautismos</a>
       <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Comuniones</a>
       <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Confirmaciones</a>
       <a id="sidebar-item" href="#" class="p-2 text-decoration-none"><i class="bi bi-journal-text"></i> Matrimonios</a>
@@ -19,8 +20,8 @@
             <h2 class="accordion-header" id="headingOne"><button class="accordion-button text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background: #6533c9 !important;"><i class="bi bi-person-fill me-2"></i> {{ user.username }}</button></h2>
             <div id="collapseOne" class="accordion-collapse collapse border-0" aria-labelledby="headingOne" data-bs-parent="#accordionUserSidebar">
               <div class="accordion-body p-2" style="background: #6533c9 !important;">
-                <a id="sidebar-item" href="{% url 'edit_user' pk=user.id %}" class="p-2 text-decoration-none">Editar</a><br />
-                <a id="sidebar-item" href="{% url 'edit_user_password' pk=user.id %}" class="p-2 text-decoration-none">Clave</a>
+                <a id="sidebar-item" href="{% url 'edit_user' pk=user.id %}" class="p-2 text-decoration-none"><i class="bi bi-pencil-square"></i> Editar</a><br />
+                <a id="sidebar-item" href="{% url 'edit_user_password' pk=user.id %}" class="p-2 text-decoration-none"> <i class="bi bi-person-fill-lock"></i> Clave</a>
               </div>
             </div>
           </div>

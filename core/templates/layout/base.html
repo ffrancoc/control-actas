@@ -9,6 +9,15 @@
     {% comment %} <link rel="stylesheet" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" /> {% endcomment %}
     {% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> {% endcomment %}
     <style>
+      @keyframes color {
+        0%   { background: linear-gradient(to left, #fff 0%, #672bdf 100%);  }
+        20%  { background: linear-gradient(to left, #fff 20%, #672bdf 80%);  }
+        40%  { background: linear-gradient(to left, #fff 40%, #672bdf 60%);  }
+        60%  { background: linear-gradient(to left, #fff 60%, #672bdf 40%);  }
+        80%  { background: linear-gradient(to left, #fff 80%, #672bdf 20%);  }
+        100% { background: linear-gradient(to left, #fff 100%, #672bdf 0%);  }
+      }
+
       #sidebar-item {
         color: #fff;
         position: relative;
@@ -21,12 +30,28 @@
         border-bottom-left-radius: 30px;
       }
       
-      #sidebar-item.sidebar-selected {
+      #sidebar-item.sidebar-selected-animate {
         font-weight: bold;
         color: #672bdf;
         background: #fff;
+        animation: color .1s 1 ease;
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;
+      }
+
+      #sidebar-item.sidebar-selected {
+        font-weight: bold;
+        color: #672bdf;
+        background: #fff;        
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+      }
+
+      #content {
+        background-image: url("{% static 'img/book.png' %}");
+        background-repeat: no-repeat;        
+        background-position: 98% 95%;
+        {% comment %} <a target="_blank" href="https://icons8.com/icon/dLx3t2v3HTHU/bible">Bible</a> icono de <a target="_blank" href="https://icons8.com">Icons8</a> {% endcomment %}
       }
       
       .custom-btn {
@@ -65,7 +90,7 @@
 
     <main class="flex-grow-1 d-flex flex-column justify-content-between align-items-center p-4">
       {% include 'partial/sidebar-offscreen.html' %}
-      <div class="flex-grow-1 container p-0 d-flex rounded-3 overflow-hidden {% if user.is_authenticated %} card shadow-sm{% endif %}">
+      <div id="content" class="flex-grow-1 container p-0 d-flex rounded-3 overflow-hidden {% if user.is_authenticated %} card shadow-sm{% endif %}">
         <div class="flex-grow-1 d-flex">
           {% if user.is_authenticated %}
             {% include 'partial/sidebar.html' %}

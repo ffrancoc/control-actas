@@ -47,20 +47,30 @@ class PersonForm(ModelForm):
             'birthplace': 'Lugar de Nacimiento',            
             'birthday': 'Fecha de Nacimiento',
             'gender': 'Genero', 
-            'father_info': 'Información Completa del Padre', 
-            'mother_info': 'Información Completa de la Madre'
+            'father_info': 'Información del Padre', 
+            'mother_info': 'Información de la Madre'
         }
         widgets = {
-            'identifier': TextInput(attrs={'class': 'form-control mb-2', 'readonly': True}),
-            'firstname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'lastname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthplace': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthday': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'gender': Select(attrs={'class': 'form-control mb-2'}), 
-            'father_info': TextInput(attrs={'class': 'form-control mb-2'}),
-            'mother_info': TextInput(attrs={'class': 'form-control mb-2'})
+            'identifier': TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'firstname': TextInput(attrs={'class': 'form-control'}),
+            'lastname': TextInput(attrs={'class': 'form-control'}),
+            'birthplace': TextInput(attrs={'class': 'form-control'}),
+            'birthday': TextInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'gender': Select(attrs={'class': 'form-control'}), 
+            'father_info': TextInput(attrs={'class': 'form-control'}),
+            'mother_info': TextInput(attrs={'class': 'form-control'})
         }
 
+class ParishForm(ModelForm):
+    class Meta:
+        model = models.Parishs
+        fields = ('name',)
+        labels = {
+            'name': 'Parroquia'
+        }
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'})
+        }
 
 class BookForm(ModelForm):
     class Meta:
@@ -73,36 +83,48 @@ class BookForm(ModelForm):
             'n_pages': 'Páginas',
         }
         widgets = {
-            'title': Select(attrs={'class': 'form-control mb-2'}),
-            'identifier': TextInput(attrs={'class': 'form-control mb-2', 'readonly': True}),
-            'description': TextInput(attrs={'class': 'form-control mb-2'}),
-            'n_pages': Select(attrs={'class': 'form-control mb-2'}),
+            'title': Select(attrs={'class': 'form-control'}),
+            'identifier': TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'description': TextInput(attrs={'class': 'form-control'}),
+            'n_pages': Select(attrs={'class': 'form-control'}),
         }
 
 
 class BaptismForm(ModelForm):
 
     @staticmethod
-    def label_from_instance(obj):
-        return "%s" % obj.identifier
+    def label_from_book_instance(obj):
+        return "%s - %s" % (obj.identifier, obj.description)
+    
+    @staticmethod
+    def label_from_person_instance(obj):
+        return "%s %s" % (obj.firstname, obj.lastname)
+    
+    @staticmethod
+    def label_from_baptism_parish_instance(obj):
+        return "%s" % obj.name
+    
 
     def __init__(self, *args, **kwargs):
         super(BaptismForm, self).__init__(*args, **kwargs)
-        self.fields['book'] = ModelChoiceField(queryset=models.Books.objects.filter(title=models.Books.TitleChoices.BAUTISMOS), widget=Select(attrs={'class': 'form-control mb-2'}))
-        self.fields['book'].label = "Seleccionar Libro"        
-        self.fields['book'].label_from_instance = self.label_from_instance
+        self.fields['book'] = ModelChoiceField(queryset=models.Books.objects.filter(title=models.TitleChoices.BAUTISMOS), widget=Select(attrs={'class': 'form-control'}))
+        self.fields['book'].label = "Libro"        
+        self.fields['book'].label_from_instance = self.label_from_book_instance
+        
+        self.fields['person'] = ModelChoiceField(queryset=models.Persons.objects.all(), widget=Select(attrs={'class': 'form-control'}))
+        self.fields['person'].label = "Persona"        
+        self.fields['person'].label_from_instance = self.label_from_person_instance
+        
+        self.fields['baptism_parish'] = ModelChoiceField(queryset=models.Parishs.objects.all(), widget=Select(attrs={'class': 'form-control'}))
+        self.fields['baptism_parish'].label = "Parroquia"        
+        self.fields['baptism_parish'].label_from_instance = self.label_from_baptism_parish_instance
+        
 
     class Meta:
         model = models.Baptisms
         fields = (
             'book',
-            'firstname',
-            'lastname',
-            'birthplace',
-            'birthday',
-            'gender',
-            'father_info',                        
-            'mother_info',
+            'person',            
             'baptism_parish',
             'baptism_date',
             'priest',
@@ -110,115 +132,20 @@ class BaptismForm(ModelForm):
             'godfather1_fullname',
             'godfather2_fullname'
         )
-        labels = {            
-            'book': 'Seleccionar Libro',
-            'firstname': 'Nombre Completo',
-            'lastname': 'Apellido Completo',
-            'birthplace': 'Lugar de Nacimiento',
-            'birthday': 'Fecha de Nacimiento',
-            'gender': 'Genero',
-            'father_info': 'Información del Padre',            
-            'mother_info': 'Información de la Madre',
-            'baptism_parish': 'Parroquia de Bautismo',
-            'baptism_date': 'Fecha de Bautismo',
+        labels = {                        
+            'baptism_parish': 'Parroquia',
+            'baptism_date': 'Fecha',
             'priest': 'Sacerdote',
             'parish_priest': 'Párroco',
-            'godfather1_fullname': 'Nombres y Apellidos de Padrino 1',
-            'godfather2_fullname': 'Nombres y Apellidos de Padrino 2 (opcional)'
+            'godfather1_fullname': 'Padrino o Madrina 1',
+            'godfather2_fullname': 'Padrino o Madrina 2'
         }
-        widgets = {                   
-            'firstname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'lastname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthplace': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthday': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'gender': Select(attrs={'class': 'form-control mb-2'}),
-            'father_info': TextInput(attrs={'class': 'form-control mb-2'}),            
-            'mother_info': TextInput(attrs={'class': 'form-control mb-2'}),
-            'baptism_parish': TextInput(attrs={'class': 'form-control mb-2'}),
-            'baptism_date': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'priest': TextInput(attrs={'class': 'form-control mb-2'}),
-            'parish_priest': TextInput(attrs={'class': 'form-control mb-2'}),
-            'godfather1_fullname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'godfather2_fullname': TextInput(attrs={'class': 'form-control mb-2'}),
-        }
-
-
-
-class CommunionForm(ModelForm):
-
-    @staticmethod
-    def label_from_instance(obj):
-        return "%s" % obj.identifier
-    
-
-    @staticmethod
-    def label_from_baptism_instance(obj):
-        return "%s" % obj.identifier
-    
-
-    def __init__(self, *args, **kwargs):
-        super(CommunionForm, self).__init__(*args, **kwargs)
-        self.fields['book'] = ModelChoiceField(queryset=models.Books.objects.filter(title=models.Books.TitleChoices.COMUNIONES), widget=Select(attrs={'class': 'form-control mb-2'}))
-        self.fields['book'].label = "Seleccionar Libro"        
-        self.fields['book'].label_from_instance = self.label_from_instance
-
-        self.fields['baptism'] = ModelChoiceField(queryset=models.Baptisms.objects.all(), required=False, widget=Select(attrs={            
-            'class': 'form-control mb-2', 
-            'onchange': 'onChangeBaptism()',
-            'hx-trigger': 'change', 
-            'hx-get': f'{reverse("baptism_object")}',           
-            'hx-include': '[name="baptism"]',
-            'hx-target': '#content'
-            }))
-        self.fields['baptism'].label = "Id. Bautismo (opcional)"        
-        self.fields['baptism'].label_from_instance = self.label_from_baptism_instance
-        
-
-    class Meta:
-        model = models.Communions
-        fields = (
-            'book',
-            'baptism',
-            'firstname',
-            'lastname',
-            'birthplace',
-            'birthday',
-            'gender',
-            'father_info',            
-            'mother_info',
-            'baptism_parish',
-            'baptism_date',
-            'communion_parish',
-            'communion_date',
-            'parish_priest'            
-        )
-        labels = {            
-            'book': 'Seleccionar Libro',
-            'baptism': 'Seleccionar Bautismo',
-            'firstname': 'Nombre Completo',
-            'lastname': 'Apellido Completo',
-            'birthplace': 'Lugar de Nacimiento',
-            'birthday': 'Fecha de Nacimiento',
-            'gender': 'Genero',
-            'father_info': 'Información del Padre',            
-            'mother_info': 'Información de la Madre',
-            'baptism_parish': 'Parroquia de Bautismo',
-            'baptism_date': 'Fecha de Bautismo',
-            'communion_parish': 'Parroquia de Comunión',
-            'communion_date': 'Fecha de Comunión',
-            'parish_priest': 'Párroco'
-        }            
         widgets = {                               
-            'firstname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'lastname': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthplace': TextInput(attrs={'class': 'form-control mb-2'}),
-            'birthday': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'gender': Select(attrs={'class': 'form-control mb-2'}),
-            'father_info': TextInput(attrs={'class': 'form-control mb-2'}),            
-            'mother_info': TextInput(attrs={'class': 'form-control mb-2'}),
-            'baptism_parish': TextInput(attrs={'class': 'form-control mb-2'}),
-            'baptism_date': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'communion_parish': TextInput(attrs={'class': 'form-control mb-2'}),
-            'communion_date': TextInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
-            'parish_priest': TextInput(attrs={'class': 'form-control mb-2'}),            
+            'baptism_parish': TextInput(attrs={'class': 'form-control'}),
+            'baptism_date': TextInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'priest': TextInput(attrs={'class': 'form-control'}),
+            'parish_priest': TextInput(attrs={'class': 'form-control '}),
+            'godfather1_fullname': TextInput(attrs={'class': 'form-control'}),
+            'godfather2_fullname': TextInput(attrs={'class': 'form-control'}),
         }
+

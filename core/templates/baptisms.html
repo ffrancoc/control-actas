@@ -1,17 +1,17 @@
 {% extends 'layout/base.html' %}
 {% block title %}
-  Libros
+  Bautismos
 {% endblock %}
 {% block headerbar %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb pt-3">
       <li class="breadcrumb-item">
-        <a href="{% url 'books' %}" class="text-decoration-none">Libros</a>
+        <a href="{% url 'baptisms' %}" class="text-decoration-none">Bautismos</a>
       </li>
       <li class="breadcrumb-item active" aria-current="page">Listado</li>
     </ol>
   </nav>
-  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_book' %}">Nuevo</a>
+  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_baptism' %}">Nuevo</a>
 {% endblock %}
 {% block alerts %}
   {% for message in messages %}
@@ -23,37 +23,35 @@
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
-    <div id="book-list">
+    <div id="baptism-list">
       <input class="search form-control" placeholder="🔍 Filtrar ..." />
       <div class="d-flex flex-wrap gap-3 py-2">
         <span class="text-muted">Ordenar por:</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="identifier" style="cursor: pointer; font-size: .8rem;">ID</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="type" style="cursor: pointer; font-size: .8rem;">Tipo</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="n_pages" style="cursor: pointer; font-size: .8rem;">Páginas</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="author" style="cursor: pointer; font-size: .8rem;">Author</span>
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="description" style="cursor: pointer; font-size: .8rem;">Descripción</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Bautisad@</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="baptism_parish_date" style="cursor: pointer; font-size: .8rem;">Parroquia / Fecha</span>        
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="priests" style="cursor: pointer; font-size: .8rem;">Sacerdote / Párroco</span>        
       </div>
 
       <ul class="list list-group">
-        {% for b in books %}
+        {% for b in baptisms %}
           <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
             <p class="identifier" style="width: 160px">
-              <small class="fw-bold">ID Libro</small><br /><small>{{ b.identifier }}</small>
+              <small class="fw-bold">ID Persona</small><br /><small>{{ b.person.identifier }}</small>
             </p>            
-            <p class="type" style="width: 100px">
-              <small class="fw-bold">Tipo Libro</small><br />{{ b.title }}
+            <p class="name" style="width: 200px">
+              <small class="fw-bold">Bautisad@</small><br />{{ b.person.firstname }} {{b.person.lastname}}
             </p>            
-            <p class="n_pages" style="width: 80px">
-              <small class="fw-bold">Páginas</small><br />{{ b.n_pages }}
+            <p class="baptism_parish_date" style="width: 200px">
+              <small class="fw-bold">Parroquia / Fecha</small><br />{{ b.baptism_parish.name }}<br />{{b.baptism_date}} 
+            </p>            
+            <p class="priests" style="width: 150px">
+              <small class="fw-bold">Sacerdote / Párroco</small><br />{{ b.priest }}<br>{{ b.parish_priest }}
             </p>
-            <p class="author" style="width: 100px">
-              <small class="fw-bold">Author</small><br />{% if b.user.username %}
-                {{b.user.username}}
-              {% endif %}
-            </p>
-            <p class="description" style="width: 300px">
-              <small class="fw-bold">Descripción</small><br />{{ b.description }}
-            </p>
+
+            <p class="goodfathers">
+              <small class="fw-bold">Padrinos</small><br />{{ b.godfather1_fullname }}<br>{{ b.godfather2_fullname }}
+            </p>            
             <p class="actions">
               <small class="fw-bold">Acciones</small><br />
               <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_book' pk=b.id %}"><i class="bi bi-pencil-square"></i></a>            
@@ -66,7 +64,7 @@
     </div>
     <div class="border-top pt-2 text-muted d-flex justify-content-between">
       <p>
-        <caption>Libros registrados: {{ books|length }}</caption>
+        <caption>Libros registrados: {{ baptisms|length }}</caption>
       </p>
     </div>
   </div>
@@ -98,7 +96,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
-      sidebarItems[3].classList.add('sidebar-selected-animate')
+      sidebarItems[4].classList.add('sidebar-selected-animate')
           
     
       const deleteModal = document.getElementById('deleteModal')
@@ -117,12 +115,12 @@
       })
     
       var options = {
-        valueNames: ['type', 'identifier', 'n_pages', 'author', 'description'],
+        valueNames: ['identifier', 'name', 'baptism_parish_date', 'priests', 'goodfathers'],
         page: 20,
         pagination: true
       }
     
-      var bookList = new List('book-list', options)
+      var baptismList = new List('baptism-list', options)
     })
   </script>
 {% endblock %}

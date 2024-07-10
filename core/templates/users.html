@@ -105,7 +105,7 @@
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
                 <div style="font-size: .8rem;">
-                  <div class="fw-bolder">Creación</div><span id="txtjoin"></span>
+                  <div class="fw-bolder">Fecha de Registro</div><span id="txtjoin"></span>
                 </div>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
@@ -160,7 +160,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
-      sidebarItems[0].classList.add('sidebar-selected')
+      sidebarItems[0].classList.add('sidebar-selected-animate')
     
       const previewModal = document.getElementById('previewModal')
       previewModal.addEventListener('show.bs.modal', (event) => {

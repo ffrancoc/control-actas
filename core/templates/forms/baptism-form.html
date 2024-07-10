@@ -1,44 +1,44 @@
 {% extends 'layout/base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-  {% if book %}
-    Editar Persona
+  {% if baptism %}
+    Editar Acta
   {% else %}
-    Nueva Persona
+    Nueva Acta
   {% endif %}
 {% endblock %}
 {% block headerbar %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb pt-3">
       <li class="breadcrumb-item">
-        <a href="{% url 'persons' %}" class="text-decoration-none">Personas</a>
+        <a href="{% url 'baptisms' %}" class="text-decoration-none">Bautismos</a>
       </li>
-      {% if person %}
-        <li class="breadcrumb-item active" aria-current="page">Editar</li>
+      {% if baptism %}
+        <li class="breadcrumb-item active" aria-current="page">Editar Acta</li>
       {% else %}
-        <li class="breadcrumb-item active" aria-current="page">Nueva</li>
+        <li class="breadcrumb-item active" aria-current="page">Nueva Acta</li>
       {% endif %}
     </ol>
   </nav>
-  <a class="ms-auto btn btn-sm btn-light border" href="{% url 'persons' %}">Cancelar</a>
+  <a class="ms-auto btn btn-sm btn-light border" href="{% url 'baptisms' %}">Cancelar</a>
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
-    <form action="{% if person %}
-        {% url 'edit_person' pk=person.id %}
+    <form action="{% if baptism %}
+        {% url 'edit_baptism' pk=baptism.id %}
       {% else %}
-        {% url 'add_person' %}
+        {% url 'add_baptism' %}
       {% endif %}"
       method="post">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Formulario Persona</h5>
+          <h5 class="card-title">Formulario Libros</h5>
           <h6 class="card-subtitle mb-2 text-muted">* campos obligatorios</h6>
           <div class="card-body">
             {% csrf_token %}
             {{ form|crispy }}
           </div>
-          {% if person %}
+          {% if book %}
             <button type="submit" class="btn btn-sm custom-btn w-100">Actualizar</button>
           {% else %}
             <button type="submit" class="btn btn-sm custom-btn w-100">Guardar</button>
@@ -52,7 +52,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
-      sidebarItems[1].classList.add('sidebar-selected')
+      sidebarItems[4].classList.add('sidebar-selected')
     })
   </script>
 {% endblock %}

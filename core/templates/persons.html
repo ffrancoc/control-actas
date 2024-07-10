@@ -11,7 +11,7 @@
       <li class="breadcrumb-item active" aria-current="page">Listado</li>
     </ol>
   </nav>
-  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_person' %}">Nuevo</a>
+  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_person' %}">Nueva</a>
 {% endblock %}
 {% block alerts %}
   {% for message in messages %}
@@ -27,7 +27,7 @@
       <input class="search form-control" placeholder="🔍 Filtrar ..." />
       <div class="d-flex flex-wrap gap-3 py-2">
         <span class="text-muted">Ordenar por:</span>        
-        <span class="sort bg-light border p-1 rounded-pill" data-sort="identifier" style="cursor: pointer; font-size: .8rem;">Identificador</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="identifier" style="cursor: pointer; font-size: .8rem;">ID</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Nombre</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="birthday" style="cursor: pointer; font-size: .8rem;">Fecha Nacimiento</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="birthplace" style="cursor: pointer; font-size: .8rem;">Lugar Nacimiento</span>
@@ -36,8 +36,8 @@
       <ul class="list list-group">
         {% for p in persons %}
           <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
-            <p class="identifier" style="width: 150px">
-              <small class="fw-bold">Identificador</small><br />{{ p.identifier }}
+            <p class="identifier" style="width: 160px">
+              <small class="fw-bold">ID Persona</small><br /><small>{{ p.identifier }}</small>
             </p>
             <p class="name" style="width: 200px">
               <small class="fw-bold">Nombre Completo</small><br />{{ p.firstname }} {{p.lastname}}
@@ -89,52 +89,52 @@
           <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtidentifier"></span>
+                <div class="fw-bolder"><small>ID Persona</small></div><span id="txtidentifier"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtname"></span>
+                <div class="fw-bolder"><small>Nombre Completo</small></div><span id="txtname"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtbirthday"></span>
+                <div class="fw-bolder"><small>Fecha de Nacimiento</small></div><span id="txtbirthday"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtbirthplace"></span>
+                <div class="fw-bolder"><small>Lugar de Nacimiento</small></div><span id="txtbirthplace"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtgender"></span>
+                <div class="fw-bolder"><small>Genero</small></div><span id="txtgender"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtfather"></span>
+                <div class="fw-bolder"><small>Información del Padre</small></div><span id="txtfather"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtmother"></span>
+                <div class="fw-bolder"><small>Información de la Madre</small></div><span id="txtmother"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtmodified"></span>
+                <div class="fw-bolder"><small>Última Modificación</small></div><span id="txtmodified"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtcreateat"></span>
+                <div class="fw-bolder"><small>Fecha de Registro</small></div><span id="txtcreateat"></span>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start p-1 ps-3">
               <div style="font-size: .8rem;">
-                <div class="fw-bolder"></div><span id="txtuser"></span>
+                <div class="fw-bolder"><small>Registrado Por</small></div><span id="txtuser"></span>
               </div>
             </li>
           </ul>
@@ -169,7 +169,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
-      sidebarItems[1].classList.add('sidebar-selected')
+      sidebarItems[1].classList.add('sidebar-selected-animate')
     
       const previewModal = document.getElementById('previewModal')
       previewModal.addEventListener('show.bs.modal', (event) => {
@@ -192,15 +192,15 @@
         fetch(url)
           .then((res) => res.json())
           .then((data) => {
-            identifier.innerHTML = `<small class="fw-bolder">Identificador</small><br />${data[0].fields.identifier}`
-            name.innerHTML = `<small class="fw-bolder">Nombre Completo</small><br />${data[0].fields.firstname} ${data[0].fields.lastname}`
-            birthday.innerHTML = `<small class="fw-bolder">Fecha de Nacimiento</small><br />${data[0].fields.birthday}`
-            birthplace.innerHTML = `<small class="fw-bolder">Lugar de Nacimiento</small><br />${data[0].fields.birthplace}`
-            gender.innerHTML = `<small class="fw-bolder">Genero</small><br />${data[0].fields.gender}`
-            father.innerHTML = `<small class="fw-bolder">Información del Padre</small><br />${data[0].fields.father_info}`
-            mother.innerHTML = `<small class="fw-bolder">Información de la Madre</small><br />${data[0].fields.mother_info}`                
-            modified.innerHTML = `<small class="fw-bolder">Modificación</small><br />${data[0].fields.modified ? data[0].fields.modified : ''}` 
-            createat.innerHTML = `<small class="fw-bolder">Creación</small><br />${data[0].fields.create_at}` 
+            identifier.innerHTML = `${data[0].fields.identifier}`
+            name.innerHTML = `${data[0].fields.firstname} ${data[0].fields.lastname}`
+            birthday.innerHTML = `${data[0].fields.birthday}`
+            birthplace.innerHTML = `${data[0].fields.birthplace}`
+            gender.innerHTML = `${data[0].fields.gender}`
+            father.innerHTML = `${data[0].fields.father_info}`
+            mother.innerHTML = `${data[0].fields.mother_info}`                
+            modified.innerHTML = `${data[0].fields.modified ? data[0].fields.modified : ''}` 
+            createat.innerHTML = `${data[0].fields.create_at}` 
 
             author = data[0].fields.user
             if (author) {
@@ -208,7 +208,7 @@
               fetch(url2)
                   .then((res) => res.json())
                   .then((data) => {            
-                    user.innerHTML = `<small class="fw-bolder">Registrado por</small><br />${data[0].fields.username ? data[0].fields.username : ''}` 
+                    user.innerHTML = `${data[0].fields.username ? data[0].fields.username : ''}` 
                   })
             }            
           })

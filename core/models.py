@@ -27,28 +27,32 @@ class PageChoices(models.IntegerChoices):
 
 class Persons(models.Model):
         
-    identifier = models.CharField(max_length=15, null=None, blank=False, unique=True)
-    firstname = models.CharField(max_length=50, null=None, blank=False)
-    lastname = models.CharField(max_length=50, null=None, blank=False)
-    birthplace = models.CharField(max_length=50, null=None, blank=False)
-    birthday = models.DateField(null=None, blank=False)
-    gender = models.CharField(max_length=9, null=None, blank=False, choices=GenderChoices.choices, default=GenderChoices.MALE)
+    identifier = models.CharField(max_length=15, null=None, blank=False, unique=True, help_text='Identificador único de la persona generado automaticamente.')
+    firstname = models.CharField(max_length=50, null=None, blank=False, help_text='Nombre completo de la persona.')
+    lastname = models.CharField(max_length=50, null=None, blank=False, help_text='Apellido completo de la persona.')
+    birthplace = models.CharField(max_length=50, null=None, blank=False, help_text='Lugar de nacimiento de la persona')
+    birthday = models.DateField(null=None, blank=False, help_text='Fecha de nacimiento de la persona.')
+    gender = models.CharField(max_length=9, null=None, blank=False, choices=GenderChoices.choices, default=GenderChoices.MALE, help_text='Genero de la persona.')
 
-    father_info = models.CharField(max_length=80, null=None, blank=False)
-    mother_info = models.CharField(max_length=80, null=None, blank=False)
+    father_info = models.CharField(max_length=80, null=None, blank=False, help_text='Nombre completo del padre de la persona.')
+    mother_info = models.CharField(max_length=80, null=None, blank=False, help_text='Nombre completo de la madre de la persona.')
 
     create_at = models.DateTimeField(null=None, blank=False, default=timezone.now)
     modified = models.DateTimeField(null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-            
+    
+    
+class Parishs(models.Model):
+    name = models.CharField(max_length=20, null=None, blank=False, unique=True, help_text='Nombre de la parroquia.')
+    create_at = models.DateTimeField(null=None, blank=False, default=timezone.now)
     
 
 class Books(models.Model):
 
     title = models.CharField(max_length=14, null=None, blank=False, choices=TitleChoices.choices, default=TitleChoices.BAUTISMOS)
-    identifier = models.CharField(max_length=50, null=None, blank=False, unique=True)
-    description = models.CharField(max_length=50, null=True, blank=True)
-    n_pages = models.IntegerField(choices=PageChoices.choices, default=PageChoices.PAGE_100)
+    identifier = models.CharField(max_length=50, null=None, blank=False, unique=True, help_text='Identificador único del acta generado automaticamente.')
+    description = models.CharField(max_length=50, null=None, blank=False, help_text='Este campo debe ser representativo, ej. actas de bautismo parroquia san pedro. longitud max. 50 caracteres')
+    n_pages = models.IntegerField(choices=PageChoices.choices, default=PageChoices.PAGE_100, help_text='Número de páginas o folios.')
     create_at = models.DateTimeField(null=None, blank=False, default=timezone.now)
     modified = models.DateTimeField(null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
@@ -56,52 +60,16 @@ class Books(models.Model):
 
 class Baptisms(models.Model):
 
-    book = models.ForeignKey(Books, on_delete=models.CASCADE)
-    identifier = models.CharField(max_length=15, null=None, blank=False, default=shortuuid.ShortUUID().random(length=15))
-    firstname = models.CharField(max_length=50, null=None, blank=False)
-    lastname = models.CharField(max_length=50, null=None, blank=False)
-    birthplace = models.CharField(max_length=50, null=None, blank=False)
-    birthday = models.DateField(null=None, blank=False)
-    gender = models.CharField(max_length=9, null=None, blank=False, choices=GenderChoices.choices, default=GenderChoices.MALE)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)    
+    person = models.ForeignKey(Persons, null=False, unique=True, on_delete=models.CASCADE)
 
-    father_info = models.CharField(max_length=80, null=None, blank=False)
-    mother_info = models.CharField(max_length=80, null=None, blank=False)
+    baptism_parish = models.ForeignKey(Parishs, on_delete=models.RESTRICT)
+    baptism_date = models.DateField(null=None, blank=False, help_text='Fecha en la que se realizo la celebración.')
+    priest = models.CharField(max_length=50, null=None, blank=False, help_text='Sacerdote que realizo la celebración.')
+    parish_priest = models.CharField(max_length=50, null=None, blank=False, help_text='Sacerdote encargado de la parroquia.')
 
-    baptism_parish = models.CharField(max_length=50, null=None, blank=False)
-    baptism_date = models.DateField(null=None, blank=False)
-    priest = models.CharField(max_length=50, null=None, blank=False)
-    parish_priest = models.CharField(max_length=50, null=None, blank=False)
-
-    godfather1_fullname = models.CharField(max_length=50, null=None, blank=False)
-    godfather2_fullname = models.CharField(max_length=50, null=True, blank=True)
-
-    create_at = models.DateTimeField(null=None, blank=False, default=timezone.now)
-    modified = models.DateTimeField(null=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-
-
-
-class Communions(models.Model):    
-
-    book = models.ForeignKey(Books, on_delete=models.CASCADE)
-    baptism = models.ForeignKey(Baptisms, null=True, blank=True,  on_delete=models.CASCADE)
-    identifier = models.CharField(max_length=15, null=None, blank=False, default=shortuuid.ShortUUID().random(length=15))
-    firstname = models.CharField(max_length=50, null=None, blank=False)
-    lastname = models.CharField(max_length=50, null=None, blank=False)
-    birthplace = models.CharField(max_length=50, null=None, blank=False)
-    birthday = models.DateField(null=None, blank=False)
-    gender = models.CharField(max_length=9, null=None, blank=False, choices=GenderChoices.choices, default=GenderChoices.MALE)
-
-    father_info = models.CharField(max_length=80, null=None, blank=False)
-    mother_info = models.CharField(max_length=80, null=None, blank=False)
-
-    baptism_parish = models.CharField(max_length=50, null=None, blank=False)
-    baptism_date = models.DateField(null=None, blank=False)
-
-    communion_parish = models.CharField(max_length=50, null=None, blank=False)
-    communion_date = models.DateField(null=None, blank=False)
-
-    parish_priest = models.CharField(max_length=50, null=None, blank=False)
+    godfather1_fullname = models.CharField(max_length=50, null=None, blank=False, help_text='Nombre completo del padrino o madrina del bautisado.')
+    godfather2_fullname = models.CharField(max_length=50, null=True, blank=True, help_text='Nombre completo del segundo padrino o madrina del bautisado.')
 
     create_at = models.DateTimeField(null=None, blank=False, default=timezone.now)
     modified = models.DateTimeField(null=True)

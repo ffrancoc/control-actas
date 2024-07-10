@@ -1,0 +1,113 @@
+{% extends 'layout/base.html' %}
+{% block title %}
+  Parroquias
+{% endblock %}
+{% block headerbar %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pt-3">
+      <li class="breadcrumb-item">
+        <a href="{% url 'parishs' %}" class="text-decoration-none">Parroquias</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Listado</li>
+    </ol>
+  </nav>
+  <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_parish' %}">Nueva</a>
+{% endblock %}
+{% block alerts %}
+  {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
+      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endblock %}
+{% block content %}
+  <div class="flex-grow-1 d-flex flex-column">
+    <div id="parish-list">
+      <input class="search form-control" placeholder="🔍 Filtrar ..." />
+      <div class="d-flex flex-wrap gap-3 py-2">
+        <span class="text-muted">Ordenar por:</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Nombre</span>  
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="created" style="cursor: pointer; font-size: .8rem;">Fecha Registro</span>
+      </div>
+
+      <ul class="list list-group">
+        {% for p in parishs %}
+          <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
+            <p class="name" style="width: 200px">
+              <small class="fw-bold">Parroquia</small><br />{{ p.name }}
+            </p>                        
+            <p class="created" style="width: 270px">
+              <small class="fw-bold">Fecha de Registro</small><br />{{ p.create_at }}
+            </p>                        
+            <p class="actions">
+              <small class="fw-bold">Acciones</small><br />
+              <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_parish' pk=p.id %}"><i class="bi bi-pencil-square"></i></a>            
+              <a class="me-1 text-decoration-none" title="Eliminar" href="" data-bs-toggle="modal" data-bs-id="{{ p.id }}" data-bs-parish="{{ p.name }}"  data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></a>               
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+      <ul class="pagination mt-2"></ul>
+    </div>
+    <div class="border-top pt-2 text-muted d-flex justify-content-between">
+      <p>
+        <caption>Parroquias registradas: {{ parishs|length }}</caption>
+      </p>
+    </div>
+  </div>
+
+
+  <!-- Modal Eliminar -->
+  <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form action="{% url 'delete_parish' %}" method="post">
+          <div class="modal-header px-3 py-3">
+            <h5 class="modal-title fs-5">Eliminar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-3">
+            {% csrf_token %}
+            <input type="text" name="parishid" id="idinput" readonly hidden />
+            <p id="parishinfo" class="p-0"></p>
+          </div>
+          <div class="modal-footer border-0 p-0">
+            <button type="submit" class="btn btn-sm custom-btn">Cofirmar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block customscript %}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebarItems = document.querySelectorAll('#sidebar #sidebar-item')
+      sidebarItems[2].classList.add('sidebar-selected-animate')
+          
+    
+      const deleteModal = document.getElementById('deleteModal')
+      deleteModal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget
+    
+        const parishId = button.getAttribute('data-bs-id')
+        const parish = button.getAttribute('data-bs-parish')        
+    
+        const parishInfo = document.getElementById('parishinfo')
+        const idInput = document.getElementById('idinput')
+    
+        parishInfo.innerHTML = `La parroquia <b>${parish}</b> será eliminada, esta acción es irreversible.<br/> ¿Desea continuar?`
+        idInput.value = parishId
+      })
+    
+      var options = {
+        valueNames: ['name', 'created'],
+        page: 20,
+        pagination: true
+      }
+    
+      var parishList = new List('parish-list', options)
+    })
+  </script>
+{% endblock %}
