@@ -38,7 +38,7 @@ class PersonView(object):
                 obj.user = request.user
                 obj.save()
                 
-                messages.add_message(request, messages.INFO, "Persona guardado exitosamente")
+                messages.add_message(request, messages.INFO, "Persona guardada exitosamente")
                 return redirect("persons")                
             else:
                 return render(request, template_path, {'form': form})   
@@ -65,7 +65,7 @@ class PersonView(object):
             else:
                 form = PersonForm(instance=person)        
                 return render(request, template_path, {'form': form, 'person': person})
-        except Exception as ex:            
+        except:            
             messages.add_message(request, messages.ERROR, 'No se ha podido actualizar la persona')
             return redirect('persons')
     

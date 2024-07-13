@@ -14,12 +14,7 @@
   <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_book' %}">Nuevo</a>
 {% endblock %}
 {% block alerts %}
-  {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
-      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
+  {% include "partial/messages.html" %}
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
@@ -29,6 +24,7 @@
         <span class="text-muted">Ordenar por:</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="identifier" style="cursor: pointer; font-size: .8rem;">ID</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="type" style="cursor: pointer; font-size: .8rem;">Tipo</span>
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="parish" style="cursor: pointer; font-size: .8rem;">Parroquia</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="n_pages" style="cursor: pointer; font-size: .8rem;">Páginas</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="author" style="cursor: pointer; font-size: .8rem;">Author</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="description" style="cursor: pointer; font-size: .8rem;">Descripción</span>
@@ -42,9 +38,12 @@
             </p>            
             <p class="type" style="width: 100px">
               <small class="fw-bold">Tipo Libro</small><br />{{ b.title }}
+            </p>
+            <p class="parish" style="width: 100px">
+              <small class="fw-bold">Parroquia</small><br />{{ b.parish.name }}
             </p>            
-            <p class="n_pages" style="width: 80px">
-              <small class="fw-bold">Páginas</small><br />{{ b.n_pages }}
+            <p class="n_pages text-center" style="width: 80px">
+              <small class="fw-bold">Páginas</small><br />{{b.certificate_count}}/{{ b.n_pages }}
             </p>
             <p class="author" style="width: 100px">
               <small class="fw-bold">Author</small><br />{% if b.user.username %}
@@ -55,7 +54,7 @@
               <small class="fw-bold">Descripción</small><br />{{ b.description }}
             </p>
             <p class="actions">
-              <small class="fw-bold">Acciones</small><br />
+              <small class="fw-bold">Acciones</small><br />              
               <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_book' pk=b.id %}"><i class="bi bi-pencil-square"></i></a>            
               <a class="me-1 text-decoration-none" title="Eliminar" href="" data-bs-toggle="modal" data-bs-id="{{ b.id }}" data-bs-book="{{ b.title }}" data-bs-bookidentifier="{{b.identifier}}" data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></a>               
             </p>
@@ -117,7 +116,7 @@
       })
     
       var options = {
-        valueNames: ['type', 'identifier', 'n_pages', 'author', 'description'],
+        valueNames: ['type', 'identifier', 'parish', 'n_pages', 'author', 'description'],
         page: 20,
         pagination: true
       }

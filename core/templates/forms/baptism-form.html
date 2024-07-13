@@ -38,7 +38,7 @@
             {% csrf_token %}
             {{ form|crispy }}
           </div>
-          {% if book %}
+          {% if baptism %}
             <button type="submit" class="btn btn-sm custom-btn w-100">Actualizar</button>
           {% else %}
             <button type="submit" class="btn btn-sm custom-btn w-100">Guardar</button>

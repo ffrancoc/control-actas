@@ -3,17 +3,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.utils import IntegrityError
 
 from ..forms import BookForm
 from ..models import Books
 
 
 class BookView(object):
-
         
     @login_required
     def index(request):        
-        _books = Books.objects.exclude(id=request.user.id).all()        
+        _books = Books.objects.all()        
         return render(request, 'books.html', {"books": _books })
         
     
@@ -22,8 +22,8 @@ class BookView(object):
         template_path = 'forms/book-form.html'
         if request.method == 'POST':
             form = BookForm(request.POST)            
-            if form.is_valid():
-                obj = form.save(commit=False)
+            if form.is_valid():                                                
+                obj = form.save(commit=False)                
                 obj.user = request.user
                 obj.save()
                 
@@ -52,11 +52,14 @@ class BookView(object):
                 else:
                     return render(request, template_path, {'form': form})        
             else:
-                form = BookForm(instance=book)        
+                form = BookForm(instance=book)   
+                if book.certificate_count() > 0:
+                    form.fields['title'].disabled = True
+                    form.fields['n_pages'].disabled = True     
                 return render(request, template_path, {'form': form, 'book': book})
-        except Exception as ex:            
+        except:            
             messages.add_message(request, messages.ERROR, 'No se ha podido actualizar el libro')
-            return redirect('users')
+            return redirect('books')
     
     
     @login_required
@@ -69,7 +72,10 @@ class BookView(object):
                     book.delete()                            
                     messages.add_message(request, messages.INFO, 'Libro eliminado satisfactoriamente')
                     return redirect('books')                
-            except:
+            except IntegrityError as ex:
+                messages.add_message(request, messages.ERROR, 'Libro no eliminado, porque tiene referencias en las actas registradas')
+                return redirect('books')
+            except Exception:
                 messages.add_message(request, messages.ERROR, 'No se ha podido eliminar el Libro')
                 return redirect('books')
             

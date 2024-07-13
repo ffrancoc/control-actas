@@ -44,5 +44,6 @@ urlpatterns = [
     # Rutas para las actas de bautismo
     path('baptisms', BaptismView.index, name='baptisms'),    
     path('add/baptisms', BaptismView.add, name='add_baptism'),
+    path('delete/baptisms', BaptismView.delete, name='delete_baptism'),  
     path('edit/<int:pk>/baptisms', BaptismView.edit, name='edit_baptism'),   
 ]

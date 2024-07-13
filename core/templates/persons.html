@@ -14,12 +14,7 @@
   <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_person' %}">Nueva</a>
 {% endblock %}
 {% block alerts %}
-  {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
-      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
+  {% include "partial/messages.html" %}
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">

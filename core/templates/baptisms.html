@@ -14,12 +14,7 @@
   <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_baptism' %}">Nuevo</a>
 {% endblock %}
 {% block alerts %}
-  {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
-      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
+  {% include "partial/messages.html" %}
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
@@ -43,19 +38,19 @@
               <small class="fw-bold">Bautisad@</small><br />{{ b.person.firstname }} {{b.person.lastname}}
             </p>            
             <p class="baptism_parish_date" style="width: 200px">
-              <small class="fw-bold">Parroquia / Fecha</small><br />{{ b.baptism_parish.name }}<br />{{b.baptism_date}} 
+              <small class="fw-bold">Parroquia / Fecha</small><br />{{ b.book.parish.name }}<br />{{b.baptism_date}} 
             </p>            
             <p class="priests" style="width: 150px">
               <small class="fw-bold">Sacerdote / Párroco</small><br />{{ b.priest }}<br>{{ b.parish_priest }}
             </p>
 
-            <p class="goodfathers">
+            <p class="goodfathers" style="width: 150px">
               <small class="fw-bold">Padrinos</small><br />{{ b.godfather1_fullname }}<br>{{ b.godfather2_fullname }}
             </p>            
             <p class="actions">
               <small class="fw-bold">Acciones</small><br />
-              <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_book' pk=b.id %}"><i class="bi bi-pencil-square"></i></a>            
-              <a class="me-1 text-decoration-none" title="Eliminar" href="" data-bs-toggle="modal" data-bs-id="{{ b.id }}" data-bs-book="{{ b.title }}" data-bs-bookidentifier="{{b.identifier}}" data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></a>               
+              <a class="me-1 text-decoration-none" title="Editar" href="{% url 'edit_baptism' pk=b.id %}"><i class="bi bi-pencil-square"></i></a>            
+              <a class="me-1 text-decoration-none" title="Eliminar" href="" data-bs-toggle="modal" data-bs-id="{{ b.id }}" data-bs-baptism="{{ b.person.firstname }}"  data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></a>               
             </p>
           </li>
         {% endfor %}
@@ -64,7 +59,7 @@
     </div>
     <div class="border-top pt-2 text-muted d-flex justify-content-between">
       <p>
-        <caption>Libros registrados: {{ baptisms|length }}</caption>
+        <caption>Bautismos registrados: {{ baptisms|length }}</caption>
       </p>
     </div>
   </div>
@@ -74,15 +69,15 @@
   <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form action="{% url 'delete_book' %}" method="post">
+        <form action="{% url 'delete_baptism' %}" method="post">
           <div class="modal-header px-3 py-3">
             <h5 class="modal-title fs-5">Eliminar</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body px-3">
             {% csrf_token %}
-            <input type="text" name="bookid" id="idinput" readonly hidden />
-            <p id="bookinfo" class="p-0"></p>
+            <input type="text" name="baptismid" id="idinput" readonly hidden />
+            <p id="baptisminfo" class="p-0"></p>
           </div>
           <div class="modal-footer border-0 p-0">
             <button type="submit" class="btn btn-sm custom-btn">Cofirmar</button>
@@ -103,15 +98,14 @@
       deleteModal.addEventListener('show.bs.modal', (event) => {
         const button = event.relatedTarget
     
-        const bookId = button.getAttribute('data-bs-id')
-        const book = button.getAttribute('data-bs-book')
-        const bookIdentifier = button.getAttribute('data-bs-bookidentifier')
+        const baptismId = button.getAttribute('data-bs-id')
+        const baptism = button.getAttribute('data-bs-baptism')        
     
-        const bookInfo = document.getElementById('bookinfo')
+        const baptismInfo = document.getElementById('baptisminfo')
         const idInput = document.getElementById('idinput')
     
-        bookInfo.innerHTML = `El libro ${book} con identificador: <b>${bookIdentifier}</b> será eliminado, esta acción es irreversible.<br/> ¿Desea continuar?`
-        idInput.value = bookId
+        baptismInfo.innerHTML = `El acta de la persona <b>${baptism}</b>, será eliminada, esta acción es irreversible.<br/> ¿Desea continuar?`
+        idInput.value = baptismId
       })
     
       var options = {

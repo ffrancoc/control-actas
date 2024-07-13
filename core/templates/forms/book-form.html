@@ -36,6 +36,10 @@
           <h6 class="card-subtitle mb-2 text-muted">* campos obligatorios</h6>
           <div class="card-body">
             {% csrf_token %}
+            {% if book.certificate_count > 0 %}
+              <input name="title" value="{{book.title}}" readonly hidden />
+              <input name="n_pages" value="{{book.n_pages}}" readonly hidden/>
+            {% endif %}
             {{ form|crispy }}
           </div>
           {% if book %}

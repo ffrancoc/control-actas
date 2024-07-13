@@ -14,12 +14,7 @@
   <a class="ms-auto btn btn-sm custom-btn" href="{% url 'add_parish' %}">Nueva</a>
 {% endblock %}
 {% block alerts %}
-  {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show d-flex p-2" role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
-      <button type="button" class="btn-close btn-sm mt-1 p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
+  {% include "partial/messages.html" %}
 {% endblock %}
 {% block content %}
   <div class="flex-grow-1 d-flex flex-column">
@@ -28,6 +23,7 @@
       <div class="d-flex flex-wrap gap-3 py-2">
         <span class="text-muted">Ordenar por:</span>
         <span class="sort bg-light border p-1 rounded-pill" data-sort="name" style="cursor: pointer; font-size: .8rem;">Nombre</span>  
+        <span class="sort bg-light border p-1 rounded-pill" data-sort="books" style="cursor: pointer; font-size: .8rem;">Libros Registrados</span>  
         <span class="sort bg-light border p-1 rounded-pill" data-sort="created" style="cursor: pointer; font-size: .8rem;">Fecha Registro</span>
       </div>
 
@@ -36,7 +32,10 @@
           <li class="list-group-item list-group-item-action d-flex flex-wrap gap-3">
             <p class="name" style="width: 200px">
               <small class="fw-bold">Parroquia</small><br />{{ p.name }}
-            </p>                        
+            </p>                   
+            <p class="books" style="width: 50px">
+              <small class="fw-bold">Libros</small><br />{{ p.book_count }}
+            </p>                  
             <p class="created" style="width: 270px">
               <small class="fw-bold">Fecha de Registro</small><br />{{ p.create_at }}
             </p>                        
@@ -102,7 +101,7 @@
       })
     
       var options = {
-        valueNames: ['name', 'created'],
+        valueNames: ['name', 'books', 'created'],
         page: 20,
         pagination: true
       }
